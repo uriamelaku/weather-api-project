@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>חיזוי מזג האוויר</title>
+
+  <!-- Basic page styling -->
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      direction: rtl;
+      background-color: #eaf6ff;
+    }
+
+    input, button {
+      padding: 8px;
+      margin: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Page title -->
+  <h1>🌤️ חיזוי מזג האוויר</h1>
+
+  <!-- Logout button -->
+  <button onclick="logout()">התנתק</button><br><br>
+
+  <!-- City input -->
+  <input type="text" id="cityInput" placeholder="הכנס עיר">
+
+  <!-- Fetch weather button -->
+  <button onclick="getWeather()">בדוק מזג אוויר</button>
+
+  <!-- Area to display weather results -->
+  <div id="weatherResult"></div>
+
+</body>
+</html>

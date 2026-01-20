@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>התחברות</title>
+
+  <!-- Basic page styling -->
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      direction: rtl;
+      background-color: #eaf6ff;
+    }
+
+    input, button {
+      padding: 8px;
+      margin: 5px;
+    }
+
+    a {
+      display: block;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Page title -->
+  <h1>🔑 התחברות</h1>
+
+  <!-- Username input -->
+  <input type="text" id="loginUsername" placeholder="שם משתמש"><br>
+
+  <!-- Password input -->
+  <input type="password" id="loginPassword" placeholder="סיסמה"><br>
+
+  <!-- Login button -->
+  <button onclick="login()">התחבר</button>
+
+  <!-- Area to display error messages -->
+  <p id="loginMsg"></p>
+
+  <!-- Link to registration page -->
+  <a href="register.html">עדיין לא רשום? לחץ כאן</a>
+  
+</body>
+</html>
