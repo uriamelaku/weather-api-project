@@ -18,5 +18,5 @@ This project includes:
 
 ---
 
-## 🏗️ Project Structure
+
 
