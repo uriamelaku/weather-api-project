@@ -16,9 +16,7 @@ const fetch = (...args) =>
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// --------------------
 // Connect to MongoDB
-// --------------------
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ Connected to MongoDB');
@@ -27,9 +25,7 @@ mongoose.connect(process.env.MONGO_URI)
   })
   .catch(err => console.error('❌ MongoDB connection error', err));
 
-// --------------------
 // User model (schema)
-// --------------------
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true }
@@ -37,16 +33,12 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-// --------------------
 // Default route (login page)
-// --------------------
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
-// --------------------
 // Middleware
-// --------------------
 
 // Parse JSON bodies
 app.use(express.json());
@@ -54,9 +46,7 @@ app.use(express.json());
 // Serve static files from "public" folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-// --------------------
 // JWT authentication middleware
-// --------------------
 function auth(req, res, next) {
     const authHeader = req.headers.authorization;
 
@@ -78,9 +68,7 @@ function auth(req, res, next) {
     }
 }
 
-// --------------------
 // Register new user
-// --------------------
 app.post('/register', async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -114,9 +102,7 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// --------------------
 // Login user
-// --------------------
 app.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -147,9 +133,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// --------------------
 // Protected weather route
-// --------------------
 app.get('/weather', auth, async (req, res) => {
     const city = req.query.city?.trim();
 
@@ -185,9 +169,7 @@ app.get('/weather', auth, async (req, res) => {
     }
 });
 
-// --------------------
 // Start server
-// --------------------
 app.listen(PORT, () => {
     console.log(`✅ Server running at http://localhost:${PORT}`);
 });
