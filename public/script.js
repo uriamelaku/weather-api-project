@@ -19,6 +19,12 @@ async function register() {
     data.message || data.error;
 }
 
+// Logout user
+function logout() {
+  localStorage.removeItem('token');
+  window.location.href = 'login.html';
+}
+
 // Login user
 async function login() {
   // Get values from input fields
@@ -78,10 +84,12 @@ async function getWeather() {
     document.getElementById('weatherResult').textContent = data.error;
   } else {
     document.getElementById('weatherResult').innerHTML = `
-      📍 City: ${data.city} <br>
-      🌡️ Temperature: ${data.temperature}°${data.unit} <br>
-      ☁️ Description: ${data.description} <br>
-      <img src="https://openweathermap.org/img/wn/${data.icon}@2x.png">
+      <div dir="rtl">
+        📍 עיר: ${data.city} <br>
+        🌡️ טמפרטורה: ${data.temperature}°${data.unit} <br>
+        ☁️ תיאור: ${data.description} <br>
+        <img src="https://openweathermap.org/img/wn/${data.icon}@2x.png">
+      </div>
     `;
   }
 }
