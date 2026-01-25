@@ -17,6 +17,29 @@
       padding: 8px;
       margin: 5px;
     }
+
+    .search-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin: 15px 0;
+      flex-wrap: wrap;
+    }
+
+    .search-controls button {
+      order: -1;
+    }
+
+    .search-controls input {
+      order: 0;
+    }
+
+    .search-controls .right-buttons {
+      order: 1;
+      display: flex;
+      gap: 5px;
+    }
   </style>
 </head>
 
@@ -27,19 +50,34 @@
   <!-- Logout button -->
   <button onclick="logout()">התנתק</button><br><br>
 
-  <!-- City input -->
-  <input type="text" id="cityInput" placeholder="הכנס עיר">
+  <!-- Search controls in one row -->
+  <div class="search-controls">
+    <!-- Check weather button (left) -->
+    <button onclick="getWeather()">בדוק מזג אוויר</button>
 
-  <!-- Fetch weather button -->
-  <button onclick="getWeather()">בדוק מזג אוויר</button>
-  <button onclick="loadHistory()">📜 היסטוריה</button>
-  <button id="hideHistoryBtn" onclick="hideHistory()" style="display: none;">❌ הסתר היסטוריה</button>
+    <!-- City input (center) -->
+    <input type="text" id="cityInput" placeholder="הכנס עיר">
+
+    <!-- History and Favorites buttons (right) -->
+    <div class="right-buttons">
+      <button onclick="loadHistory()">📜 היסטוריה</button>
+      <button onclick="loadFavorites()">⭐ המועדפים שלי</button>
+    </div>
+  </div>
+
+  <button id="hideHistoryBtn" onclick="hideHistory()" style="display: none;">❌ הסתר היסטוריה</button><br><br>
 
   <!-- Area to display weather results -->
   <div id="weatherResult"></div>
 
+  <!-- Add to favorites button (shows after weather search) -->
+  <button id="addFavBtn" onclick="addToFavorites()" style="display: none;">⭐ הוסף למועדפים</button>
+
   <!-- Area to display search history -->
   <div id="historyResult"></div>
+
+  <!-- Area to display favorites -->
+  <div id="favoritesResult"></div>
 
   <script src="/script.js"></script>
 </body>

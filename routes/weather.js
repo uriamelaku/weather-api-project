@@ -4,6 +4,7 @@ const fetch = (...args) =>
 
 const auth = require('../middleware/auth');
 const WeatherSearch = require('../models/weatherSearch');
+const Favorite = require('../models/favorite');
 
 const router = express.Router();
 
@@ -71,6 +72,64 @@ router.get('/history', auth, async (req, res) => {
   } catch (err) {
     console.error('❌ Failed to fetch history:', err);
     res.status(500).json({ error: 'שגיאה בטעינת ההיסטוריה' });
+  }
+});
+
+// --------------------
+// Add city to favorites
+// --------------------
+router.post('/favorites', auth, async (req, res) => {
+  try {
+    const { city } = req.body;
+
+    if (!city) {
+      return res.status(400).json({ error: 'עיר נדרשת' });
+    }
+
+    const favorite = new Favorite({
+      userId: req.user.id,
+      city: city.trim()
+    });
+
+    await favorite.save();
+    res.json({ message: 'הוסף למועדפים בהצלחה' });
+  } catch (err) {
+    if (err.code === 11000) {
+      // Duplicate key error
+      return res.status(400).json({ error: 'העיר כבר במועדפים' });
+    }
+    console.error('❌ Failed to add favorite:', err);
+    res.status(500).json({ error: 'שגיאת שרת' });
+  }
+});
+
+// --------------------
+// Get user's favorites
+// --------------------
+router.get('/favorites', auth, async (req, res) => {
+  try {
+    const favorites = await Favorite.find({ userId: req.user.id })
+      .sort({ createdAt: -1 });
+
+    res.json({ favorites });
+  } catch (err) {
+    console.error('❌ Failed to fetch favorites:', err);
+    res.status(500).json({ error: 'שגיאה בטעינת המועדפים' });
+  }
+});
+
+// --------------------
+// Remove from favorites
+// --------------------
+router.delete('/favorites/:city', auth, async (req, res) => {
+  try {
+    const { city } = req.params;
+
+    await Favorite.deleteOne({ userId: req.user.id, city: city });
+    res.json({ message: 'הוסר מהמועדפים' });
+  } catch (err) {
+    console.error('❌ Failed to remove favorite:', err);
+    res.status(500).json({ error: 'שגיאת שרת' });
   }
 });
 

@@ -82,7 +82,11 @@ async function getWeather() {
   // Handle error or display weather data
   if (data.error) {
     document.getElementById('weatherResult').textContent = data.error;
+    document.getElementById('addFavBtn').style.display = 'none';
   } else {
+    // שמור את שם העיר לשימוש בפונקציית "הוסף למועדפים"
+    window.currentCity = data.city;
+    
     document.getElementById('weatherResult').innerHTML = `
       <div dir="rtl">
         📍 עיר: ${data.city} <br>
@@ -91,6 +95,9 @@ async function getWeather() {
         <img src="https://openweathermap.org/img/wn/${data.icon}@2x.png">
       </div>
     `;
+    
+    // הצג את כפתור "הוסף למועדפים"
+    document.getElementById('addFavBtn').style.display = 'inline-block';
   }
 }
 
@@ -140,5 +147,104 @@ async function loadHistory() {
 function hideHistory() {
   document.getElementById('historyResult').innerHTML = '';
   document.getElementById('hideHistoryBtn').style.display = 'none';
+}
+
+// Add city to favorites
+async function addToFavorites() {
+  const city = window.currentCity;
+  const token = localStorage.getItem('token');
+
+  if (!city || !token) {
+    alert('אנא בדוק מזג אוויר קודם');
+    return;
+  }
+
+  const res = await fetch('/favorites', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({ city })
+  });
+
+  const data = await res.json();
+
+  if (data.message) {
+    alert(data.message);
+    document.getElementById('addFavBtn').style.display = 'none';
+  } else {
+    alert(data.error);
+  }
+}
+
+// Load favorites
+async function loadFavorites() {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    document.getElementById('favoritesResult').textContent = 'You must log in first';
+    return;
+  }
+
+  const res = await fetch('/favorites', {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  const data = await res.json();
+
+  if (data.error) {
+    document.getElementById('favoritesResult').textContent = data.error;
+  } else if (!data.favorites || data.favorites.length === 0) {
+    document.getElementById('favoritesResult').innerHTML = '<p>אין עדיין מועדפים</p>';
+  } else {
+    let html = '<div dir="rtl"><h3>⭐ המועדפים שלי</h3><div style="display: grid; gap: 10px;">';
+    
+    data.favorites.forEach(fav => {
+      html += `
+        <div style="border: 2px solid #FFD700; margin: 10px; padding: 10px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
+          <button onclick="searchFavorite('${fav.city}')" style="background-color: #87CEEB; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">
+            🔍 ${fav.city}
+          </button>
+          <button onclick="removeFavorite('${fav.city}')" style="background-color: #FF6B6B; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">
+            ❌ הסר
+          </button>
+        </div>
+      `;
+    });
+    
+    html += '</div></div>';
+    document.getElementById('favoritesResult').innerHTML = html;
+  }
+}
+
+// Search for a favorite city
+function searchFavorite(city) {
+  document.getElementById('cityInput').value = city;
+  getWeather();
+  document.getElementById('favoritesResult').innerHTML = '';
+}
+
+// Remove from favorites
+async function removeFavorite(city) {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    alert('אנא התחבר קודם');
+    return;
+  }
+
+  const res = await fetch(`/favorites/${encodeURIComponent(city)}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  const data = await res.json();
+  alert(data.message || data.error);
+  loadFavorites(); // רענן את הרשימה
 }
 
