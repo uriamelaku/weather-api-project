@@ -32,9 +32,14 @@
 
   <!-- Fetch weather button -->
   <button onclick="getWeather()">בדוק מזג אוויר</button>
+  <button onclick="loadHistory()">📜 היסטוריה</button>
+  <button id="hideHistoryBtn" onclick="hideHistory()" style="display: none;">❌ הסתר היסטוריה</button>
 
   <!-- Area to display weather results -->
   <div id="weatherResult"></div>
+
+  <!-- Area to display search history -->
+  <div id="historyResult"></div>
 
   <script src="/script.js"></script>
 </body>

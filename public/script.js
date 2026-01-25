@@ -93,3 +93,52 @@ async function getWeather() {
     `;
   }
 }
+
+// Load search history
+async function loadHistory() {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    document.getElementById('historyResult').textContent = 'You must log in first';
+    return;
+  }
+
+  const res = await fetch('/history', {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  const data = await res.json();
+
+  if (data.error) {
+    document.getElementById('historyResult').textContent = data.error;
+  } else if (!data.history || data.history.length === 0) {
+    document.getElementById('historyResult').innerHTML = '<p>אין עדיין היסטוריית חיפושים</p>';
+    document.getElementById('hideHistoryBtn').style.display = 'inline-block';
+  } else {
+    let html = '<div dir="rtl"><h3>📜 היסטוריית חיפושים שלי</h3><ul style="list-style: none; padding: 0;">';
+    
+    data.history.forEach(search => {
+      const date = new Date(search.createdAt).toLocaleString('he-IL');
+      html += `
+        <li style="border: 1px solid #ccc; margin: 10px; padding: 10px; border-radius: 5px;">
+          📍 <b>${search.city}</b> - ${search.temperature}°C<br>
+          ☁️ ${search.description}<br>
+          🕐 ${date}
+        </li>
+      `;
+    });
+    
+    html += '</ul></div>';
+    document.getElementById('historyResult').innerHTML = html;
+    document.getElementById('hideHistoryBtn').style.display = 'inline-block';
+  }
+}
+
+// Hide search history
+function hideHistory() {
+  document.getElementById('historyResult').innerHTML = '';
+  document.getElementById('hideHistoryBtn').style.display = 'none';
+}
+
