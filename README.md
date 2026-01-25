@@ -31,7 +31,4 @@ The focus of this project is **clean architecture, correctness, and real-world b
 - Safe interaction with third-party APIs
 - Git branching workflow and incremental development
 
----
-
-## 🏗️ Architecture
 
