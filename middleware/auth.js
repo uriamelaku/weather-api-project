@@ -8,6 +8,7 @@ function auth(req, res, next) {
   if (!authHeader) {
     return res.status(401).json({ error: 'Token missing' });
   }
+  
 
   // Extract token from "Bearer <token>"
   const token = authHeader.split(' ')[1];
