@@ -56,6 +56,13 @@ async function getWeather() {
   // Get city name from input
   const city = document.getElementById('cityInput').value;
 
+  // Clear all other sections
+  document.getElementById('historyResult').innerHTML = '';
+  document.getElementById('favoritesResult').innerHTML = '';
+  document.getElementById('hideHistoryBtn').style.display = 'none';
+  document.getElementById('deleteHistoryBtn').style.display = 'none';
+  document.getElementById('addFavBtn').style.display = 'none';
+
   // Get token from localStorage
   const token = localStorage.getItem('token');
 
@@ -110,6 +117,11 @@ async function loadHistory() {
     return;
   }
 
+  // Clear all other sections
+  document.getElementById('weatherResult').innerHTML = '';
+  document.getElementById('favoritesResult').innerHTML = '';
+  document.getElementById('addFavBtn').style.display = 'none';
+
   const res = await fetch('/history', {
     headers: {
       'Authorization': `Bearer ${token}`
@@ -122,17 +134,23 @@ async function loadHistory() {
     document.getElementById('historyResult').textContent = data.error;
   } else if (!data.history || data.history.length === 0) {
     document.getElementById('historyResult').innerHTML = '<p>אין עדיין היסטוריית חיפושים</p>';
-    document.getElementById('hideHistoryBtn').style.display = 'inline-block';
+    document.getElementById('hideHistoryBtn').style.display = 'none';
+    document.getElementById('deleteHistoryBtn').style.display = 'none';
   } else {
     let html = '<div dir="rtl"><h3>📜 היסטוריית חיפושים שלי</h3><ul style="list-style: none; padding: 0;">';
     
     data.history.forEach(search => {
       const date = new Date(search.createdAt).toLocaleString('he-IL');
       html += `
-        <li style="border: 1px solid #ccc; margin: 10px; padding: 10px; border-radius: 5px;">
-          📍 <b>${search.city}</b> - ${search.temperature}°C<br>
-          ☁️ ${search.description}<br>
-          🕐 ${date}
+        <li style="border: 1px solid #ccc; margin: 10px; padding: 10px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            📍 <b>${search.city}</b> - ${search.temperature}°C<br>
+            ☁️ ${search.description}<br>
+            🕐 ${date}
+          </div>
+          <button onclick="deleteHistoryItem('${search._id}')" style="background-color: #FF6B6B; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">
+            ❌ מחק
+          </button>
         </li>
       `;
     });
@@ -140,6 +158,7 @@ async function loadHistory() {
     html += '</ul></div>';
     document.getElementById('historyResult').innerHTML = html;
     document.getElementById('hideHistoryBtn').style.display = 'inline-block';
+    document.getElementById('deleteHistoryBtn').style.display = 'inline-block';
   }
 }
 
@@ -147,6 +166,52 @@ async function loadHistory() {
 function hideHistory() {
   document.getElementById('historyResult').innerHTML = '';
   document.getElementById('hideHistoryBtn').style.display = 'none';
+  document.getElementById('deleteHistoryBtn').style.display = 'none';
+}
+
+// Delete single history item
+async function deleteHistoryItem(id) {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    alert('אנא התחבר קודם');
+    return;
+  }
+
+  const res = await fetch(`/history/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  const data = await res.json();
+  await loadHistory(); // רענן את ההיסטוריה
+}
+
+// Delete all history
+async function deleteAllHistory() {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    alert('אנא התחבר קודם');
+    return;
+  }
+
+  if (!confirm('האם אתה בטוח שברצונך למחוק את כל ההיסטוריה?')) {
+    return;
+  }
+
+  const res = await fetch('/history', {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  const data = await res.json();
+  alert(data.message || data.error);
+  await loadHistory(); // רענן את ההיסטוריה
 }
 
 // Add city to favorites
@@ -186,6 +251,13 @@ async function loadFavorites() {
     document.getElementById('favoritesResult').textContent = 'You must log in first';
     return;
   }
+
+  // Clear all other sections
+  document.getElementById('weatherResult').innerHTML = '';
+  document.getElementById('historyResult').innerHTML = '';
+  document.getElementById('hideHistoryBtn').style.display = 'none';
+  document.getElementById('deleteHistoryBtn').style.display = 'none';
+  document.getElementById('addFavBtn').style.display = 'none';
 
   const res = await fetch('/favorites', {
     headers: {

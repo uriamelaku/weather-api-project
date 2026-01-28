@@ -15,7 +15,7 @@ router.get('/weather', auth, async (req, res) => {
   const city = req.query.city?.trim();
 
   if (!city) {
-    return res.status(400).json({ error: 'City is required' });
+    return res.status(400).json({ error: 'עיר נדרשת' });
   }
 
   try {
@@ -72,6 +72,34 @@ router.get('/history', auth, async (req, res) => {
   } catch (err) {
     console.error('❌ Failed to fetch history:', err);
     res.status(500).json({ error: 'שגיאה בטעינת ההיסטוריה' });
+  }
+});
+
+// --------------------
+// Delete single history item
+// --------------------
+router.delete('/history/:id', auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await WeatherSearch.deleteOne({ _id: id, userId: req.user.id });
+    res.json({ message: 'פריט הוסר מההיסטוריה' });
+  } catch (err) {
+    console.error('❌ Failed to delete history item:', err);
+    res.status(500).json({ error: 'שגיאת שרת' });
+  }
+});
+
+// --------------------
+// Delete all history
+// --------------------
+router.delete('/history', auth, async (req, res) => {
+  try {
+    await WeatherSearch.deleteMany({ userId: req.user.id });
+    res.json({ message: 'ההיסטוריה נמחקה בהצלחה' });
+  } catch (err) {
+    console.error('❌ Failed to delete history:', err);
+    res.status(500).json({ error: 'שגיאת שרת' });
   }
 });
 

@@ -5,15 +5,17 @@ const User = require('../models/users');
 
 const router = express.Router();
 
-// --------------------
 // Register new user
-// --------------------
 router.post('/register', async (req, res) => {
   try {
     const { username, password } = req.body;
 
     if (!username || !password) {
       return res.status(400).json({ error: 'שם משתמש וסיסמה נדרשים' });
+    }
+
+    if (password.length < 3) {
+      return res.status(400).json({ error: 'הסיסמה חייבת להיות לפחות 3 תווים' });
     }
 
     const existingUser = await User.findOne({ username });
@@ -31,9 +33,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// --------------------
 // Login user
-// --------------------
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -49,6 +49,10 @@ router.post('/login', async (req, res) => {
     
     if (!password) {
       return res.status(400).json({ error: 'לא הכנסת סיסמה' });
+    }
+
+    if (password.length < 3) {
+      return res.status(400).json({ error: 'הסיסמה חייבת להיות לפחות 3 תווים' });
     }
 
     const user = await User.findOne({ username });
