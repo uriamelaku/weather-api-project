@@ -2,48 +2,30 @@
 <html lang="he">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>הרשמה</title>
-
-  <!-- Basic page styling -->
+  <link rel="stylesheet" href="/style.css">
   <style>
     body {
-      font-family: Arial;
-      text-align: center;
-      direction: rtl;
-      background-color: #eaf6ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-
-    input, button {
-      padding: 8px;
-      margin: 5px;
-    }
-
-    a {
-      display: block;
-      margin-top: 10px;
+    .container {
+      min-width: 350px;
     }
   </style>
 </head>
 
 <body>
-  <!-- Page title -->
-  <h1>📝 הרשמה</h1>
-
-  <!-- Username input -->
-  <input type="text" id="regUsername" placeholder="שם משתמש"><br>
-
-  <!-- Password input -->
-  <input type="password" id="regPassword" placeholder="סיסמה"><br>
-
-  <!-- Register button -->
-  <button onclick="register()">הירשם</button>
-
-  <!-- Area to display success or error messages -->
-  <p id="regMsg"></p>
-
-  <!-- Link to login page -->
-  <a href="login.html">כבר רשום? לחץ כאן להתחבר</a>
-
+  <div class="container">
+    <h1>📝 הרשמה</h1>
+    <input type="text" id="regUsername" placeholder="שם משתמש"><br>
+    <input type="password" id="regPassword" placeholder="סיסמה"><br>
+    <button onclick="register()">הירשם</button>
+    <p id="regMsg" style="color: #FF6B6B; margin-top: 15px;"></p>
+    <a href="login.html" style="color: #667eea; text-decoration: none; margin-top: 15px; display: block;">כבר רשום? <strong>לחץ כאן להתחבר</strong></a>
+  </div>
   <script src="/script.js"></script>
 </body>
 </html>
