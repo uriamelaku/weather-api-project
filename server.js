@@ -42,7 +42,6 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
-// Middleware
 
 // Parse JSON bodies
 app.use(express.json());

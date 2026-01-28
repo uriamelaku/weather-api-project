@@ -2,81 +2,29 @@
 <html lang="he">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>חיזוי מזג האוויר</title>
-
-  <!-- Basic page styling -->
-  <style>
-    body {
-      font-family: Arial;
-      text-align: center;
-      direction: rtl;
-      background-color: #eaf6ff;
-    }
-
-    input, button {
-      padding: 8px;
-      margin: 5px;
-    }
-
-    .search-controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      margin: 15px 0;
-      flex-wrap: wrap;
-    }
-
-    .search-controls button {
-      order: -1;
-    }
-
-    .search-controls input {
-      order: 0;
-    }
-
-    .search-controls .right-buttons {
-      order: 1;
-      display: flex;
-      gap: 5px;
-    }
-  </style>
+  <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
-  <!-- Page title -->
+  <button onclick="logout()" style="position: absolute; top: 20px; right: 20px;">התנתק</button>
+
   <h1>🌤️ חיזוי מזג האוויר</h1>
 
-  <!-- Logout button -->
-  <button onclick="logout()">התנתק</button><br><br>
-
-  <!-- Search controls in one row -->
   <div class="search-controls">
-    <!-- Check weather button (left) -->
     <button onclick="getWeather()">בדוק מזג אוויר</button>
-
-    <!-- City input (center) -->
-    <input type="text" id="cityInput" placeholder="הכנס עיר">
-
-    <!-- History and Favorites buttons (right) -->
-    <div class="right-buttons">
-      <button onclick="loadHistory()">📜 היסטוריה</button>
-      <button onclick="loadFavorites()">⭐ המועדפים שלי</button>
-    </div>
+    <input type="text" id="cityInput" placeholder="הכנס שם עיר...">
+    <button onclick="loadHistory()">📜 היסטוריה</button>
+    <button onclick="loadFavorites()">⭐ המועדפים שלי</button>
   </div>
 
-  <button id="hideHistoryBtn" onclick="hideHistory()" style="display: none;">❌ הסתר היסטוריה</button><br><br>
+  <button id="hideHistoryBtn" onclick="hideHistory()" style="display: none; background: #FF9800; margin-top: 10px;">❌ הסתר היסטוריה</button>
+  <button id="deleteHistoryBtn" onclick="deleteAllHistory()" style="display: none; background: #FF6B6B; margin-top: 10px;">🗑️ מחק את כל ההיסטוריה</button>
 
-  <!-- Area to display weather results -->
   <div id="weatherResult"></div>
-
-  <!-- Add to favorites button (shows after weather search) -->
-  <button id="addFavBtn" onclick="addToFavorites()" style="display: none;">⭐ הוסף למועדפים</button>
-
-  <!-- Area to display search history -->
+  <button id="addFavBtn" onclick="addToFavorites()" style="display: none; background: #FFD700; color: #333; font-weight: bold; margin-top: 15px;">⭐ הוסף למועדפים</button>
   <div id="historyResult"></div>
-
-  <!-- Area to display favorites -->
   <div id="favoritesResult"></div>
 
   <script src="/script.js"></script>
