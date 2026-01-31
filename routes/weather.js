@@ -38,7 +38,7 @@ router.get('/weather', auth, async (req, res) => {
       icon: data.weather[0].icon
     };
 
-    // 💾 שמירת החיפוש במסד הנתונים
+    // 💾 Save the search to the database
     try {
       const weatherSearch = new WeatherSearch({
         userId: req.user.id,
@@ -49,7 +49,7 @@ router.get('/weather', auth, async (req, res) => {
       });
       await weatherSearch.save();
     } catch (saveError) {
-      // אם השמירה נכשלה, ממשיכים - לא משפיע על המשתמש
+      // If saving fails, continue - does not affect the user
       console.error('❌ Failed to save search history:', saveError);
     }
 
@@ -65,8 +65,8 @@ router.get('/weather', auth, async (req, res) => {
 router.get('/history', auth, async (req, res) => {
   try {
     const searches = await WeatherSearch.find({ userId: req.user.id })
-      .sort({ createdAt: -1 }) // הכי חדש קודם
-      .limit(20); // מגביל ל-20 חיפושים אחרונים
+      .sort({ createdAt: -1 }) // Newest first
+      .limit(20); // Limit to last 20 searches
 
     res.json({ history: searches });
   } catch (err) {
@@ -86,7 +86,7 @@ router.delete('/history/:id', auth, async (req, res) => {
     res.json({ message: 'פריט הוסר מההיסטוריה' });
   } catch (err) {
     console.error('❌ Failed to delete history item:', err);
-    res.status(500).json({ error: 'שגיאת שרת' });
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
@@ -99,7 +99,7 @@ router.delete('/history', auth, async (req, res) => {
     res.json({ message: 'ההיסטוריה נמחקה בהצלחה' });
   } catch (err) {
     console.error('❌ Failed to delete history:', err);
-    res.status(500).json({ error: 'שגיאת שרת' });
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
@@ -127,7 +127,7 @@ router.post('/favorites', auth, async (req, res) => {
       return res.status(400).json({ error: 'העיר כבר במועדפים' });
     }
     console.error('❌ Failed to add favorite:', err);
-    res.status(500).json({ error: 'שגיאת שרת' });
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
@@ -157,7 +157,7 @@ router.delete('/favorites/:city', auth, async (req, res) => {
     res.json({ message: 'הוסר מהמועדפים' });
   } catch (err) {
     console.error('❌ Failed to remove favorite:', err);
-    res.status(500).json({ error: 'שגיאת שרת' });
+    res.status(500).json({ error: 'Server error' });
   }
 });
 

@@ -91,7 +91,7 @@ async function getWeather() {
     document.getElementById('weatherResult').textContent = data.error;
     document.getElementById('addFavBtn').style.display = 'none';
   } else {
-    // שמור את שם העיר לשימוש בפונקציית "הוסף למועדפים"
+    // Save the city name for use in the 'Add to Favorites' function
     window.currentCity = data.city;
     
     document.getElementById('weatherResult').innerHTML = `
@@ -103,7 +103,7 @@ async function getWeather() {
       </div>
     `;
     
-    // הצג את כפתור "הוסף למועדפים"
+    // Display the 'Add to Favorites' button
     document.getElementById('addFavBtn').style.display = 'inline-block';
   }
 }
@@ -186,7 +186,7 @@ async function deleteHistoryItem(id) {
   });
 
   const data = await res.json();
-  await loadHistory(); // רענן את ההיסטוריה
+  await loadHistory(); // Refresh the history
 }
 
 // Delete all history
@@ -211,7 +211,7 @@ async function deleteAllHistory() {
 
   const data = await res.json();
   alert(data.message || data.error);
-  await loadHistory(); // רענן את ההיסטוריה
+  await loadHistory(); // Refresh the history
 }
 
 // Add city to favorites
@@ -317,6 +317,6 @@ async function removeFavorite(city) {
 
   const data = await res.json();
   alert(data.message || data.error);
-  loadFavorites(); // רענן את הרשימה
+  loadFavorites(); // Refresh the list
 }
 

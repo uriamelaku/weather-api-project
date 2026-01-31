@@ -16,7 +16,7 @@ const favoriteSchema = new mongoose.Schema({
   }
 });
 
-// הוודא שלא תהיה כפילות - משתמש לא יוכל להוסיף את אותה עיר פעמיים
+// Ensure no duplicates - user cannot add the same city twice
 favoriteSchema.index({ userId: 1, city: 1 }, { unique: true });
 
 module.exports = mongoose.model('Favorite', favoriteSchema);
